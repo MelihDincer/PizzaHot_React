@@ -19,7 +19,7 @@ export default function ThemeSelector() {
           <span
             key={color}
             className={`bg-${color}`}
-            onClick={() => setColor(color)}
+            onClick={() => changeColor(color)}
           ></span>
         ))}
       </div>

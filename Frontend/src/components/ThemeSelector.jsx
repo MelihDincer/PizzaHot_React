@@ -11,7 +11,7 @@ import "./ThemeSelector.css";
 import { ThemeContext } from "../contexts/ThemeContext";
 
 export default function ThemeSelector() {
-  const { color, setColor } = useContext(ThemeContext);
+  const { changeColor } = useContext(ThemeContext);
   return (
     <div className="container theme-selector">
       <div className="theme-links">

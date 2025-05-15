@@ -5,6 +5,9 @@ import { CartContext } from "../contexts/CartContext";
 export default function Header() {
   const { color } = useContext(ThemeContext);
   const { items } = useContext(CartContext);
+  const totalCardItems = items.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
   return (
     <header>
       <nav
@@ -17,7 +20,7 @@ export default function Header() {
           </a>
           <button className="btn btn-dark">
             <i className="bi bi-cart3"></i>
-            <span className="ms-2">({items.length})</span>
+            <span className="ms-2">({totalCardItems})</span>
           </button>
         </div>
       </nav>

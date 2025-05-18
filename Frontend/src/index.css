@@ -43,16 +43,6 @@ dialog[open] {
   }
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.actions button {
-  width: 30px;
-}
-
 .cart-summary {
   display: flex;
   justify-content: space-between;
@@ -68,4 +58,11 @@ dialog[open] {
 .cart-item {
   display: flex;
   justify-content: space-between;
+}
+
+.cart-modal {
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  background-color: white;
 }

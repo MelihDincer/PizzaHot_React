@@ -12,15 +12,17 @@ export function CartContextProvider({ children }) {
 
   function updateItem() {}
 
-  function deleteItem() {}
+  function deleteItem(id) {
+    dispatch({ type: "REMOVE_ITEM", id });
+  }
 
   function clearAll() {}
 
   const cartContext = {
     items: cart.items,
     addItem,
+    deleteItem,
   };
-  console.log(cartContext);
 
   return (
     <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>

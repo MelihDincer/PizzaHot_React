@@ -7,7 +7,7 @@ import { UIContext } from "../contexts/UIContext";
 export default function Cart() {
   const { items, addItem, deleteItem } = useContext(CartContext);
 
-  const { uiProgress, hideCart } = useContext(UIContext);
+  const { uiProgress, hideCart, showCheckout } = useContext(UIContext);
 
   const cartTotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -21,16 +21,21 @@ export default function Cart() {
         style={{ minWidth: "400px", background: "#fff" }}
       >
         <h3 className="text-center mb-4 border-bottom pb-2">🛒 Sepetiniz</h3>
-        <ul className="cart-items">
-          {items.map((item) => (
-            <CartItem
-              key={item.id}
-              item={item}
-              onIncrease={() => addItem(item)}
-              onDecrease={() => deleteItem(item.id)}
-            />
-          ))}
-        </ul>
+        {items.length === 0 ? (
+          <div className="alert alert-danger">Sepetinizde Ürün Yok</div>
+        ) : (
+          <ul className="cart-items">
+            {items.map((item) => (
+              <CartItem
+                key={item.id}
+                item={item}
+                onIncrease={() => addItem(item)}
+                onDecrease={() => deleteItem(item.id)}
+              />
+            ))}
+          </ul>
+        )}
+
         <div className="cart-summary">
           <div className="modal-actions text-end">
             <button
@@ -39,11 +44,18 @@ export default function Cart() {
             >
               Kapat
             </button>
-            <button className="btn btn-sm btn-outline-success">
-              Sipariş Ver
-            </button>
+            {items.length > 0 && (
+              <button
+                className="btn btn-sm btn-outline-success"
+                onClick={() => showCheckout()}
+              >
+                Sipariş Ver
+              </button>
+            )}
           </div>
-          <p className="badge text-bg-success mb-0 fs-5">{cartTotal}₺</p>
+          {items.length > 0 && (
+            <p className="badge text-bg-success mb-0 fs-5">{cartTotal}₺</p>
+          )}
         </div>
       </div>
     </Modal>

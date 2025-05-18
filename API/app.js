@@ -22,11 +22,7 @@ app.get("/pizzas", async (req, res) => {
 app.post("/orders", async (req, res) => {
   const order = req.body.order;
 
-  if (
-    order === null ||
-    order.items === null ||
-    order.items.length === 0
-  ) {
+  if (order === null || order.items === null || order.items.length === 0) {
     return res.status(400).json({ message: "No data sent." });
   }
 
@@ -41,14 +37,13 @@ app.post("/orders", async (req, res) => {
     order.customer.city.trim() === ""
   ) {
     return res.status(400).json({
-      message:
-        "Please fill the form.",
+      message: "Please fill the form.",
     });
   }
 
   const newOrder = {
     ...order,
-    id: (Date.now()).toString(),
+    id: Date.now().toString(),
   };
   const orders = await fs.readFile("data/orders.json", "utf8");
   const allOrders = JSON.parse(orders);

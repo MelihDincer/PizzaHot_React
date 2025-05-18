@@ -12,12 +12,30 @@ export default function Checkout() {
     0
   );
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const customerData = Object.fromEntries(formData.entries());
+    fetch("http://localhost:3000/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        order: {
+          items: items,
+          customer: customerData,
+        },
+      }),
+    });
+  }
+
   return (
     <Modal open={uiProgress === "checkout"}>
       <h2>Checkout</h2>
       <p className="text-danger">Sipariş Toplam: {cartTotal} ₺</p>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Ad Soyad
@@ -88,21 +106,21 @@ export default function Checkout() {
             </div>
           </div>
         </div>
+        <button
+          className="btn btn-sm btn-outline-danger me-2"
+          onClick={() => hideCheckout()}
+        >
+          Kapat
+        </button>
+
+        <button
+          type="submit"
+          className="btn btn-sm btn-primary me-2"
+          onClick={() => hideCheckout()}
+        >
+          Kaydet
+        </button>
       </form>
-
-      <button
-        className="btn btn-sm btn-outline-danger me-2"
-        onClick={() => hideCheckout()}
-      >
-        Kapat
-      </button>
-
-      <button
-        className="btn btn-sm btn-primary me-2"
-        onClick={() => hideCheckout()}
-      >
-        Kaydet
-      </button>
     </Modal>
   );
 }

@@ -8,7 +8,8 @@ const config = {
 export default function PizzaList() {
   const { data, isLoading, error } = useFetch(
     "http://localhost:3000/pizzas",
-    config
+    config,
+    []
   );
 
   if (isLoading) {
@@ -26,7 +27,7 @@ export default function PizzaList() {
   return (
     <div className="pizza-list">
       <div className="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-4">
-        {data?.map((pizza, key) => (
+        {data.map((pizza, key) => (
           <Pizza data={pizza} key={key} />
         ))}
       </div>

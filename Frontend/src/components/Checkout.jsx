@@ -13,13 +13,18 @@ const config = {
 
 export default function Checkout() {
   const { uiProgress, hideCheckout } = useContext(UIContext);
-  const { items } = useContext(CartContext);
+  const { items, clearAll } = useContext(CartContext);
 
   const { data, isLoading, error, SendRequest } = useFetch(
-    "http://localhost:3000/orders",
+    "http://localhost:3000/orderss",
     config,
     []
   );
+
+  function handleClose() {
+    hideCheckout();
+    clearAll();
+  }
 
   const cartTotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -41,19 +46,21 @@ export default function Checkout() {
     );
   }
 
-  // if (data && !error) {
-  //   return (
-  //     <Modal open={uiProgress === "checkout"}>
-  //       <h2>Siparişiniz Alındı.</h2>
-  //       <button
-  //         className="btn btn-sm btn-outline-danger me-2"
-  //         onClick={() => hideCheckout()}
-  //       >
-  //         Kapat
-  //       </button>
-  //     </Modal>
-  //   );
-  // }
+  console.log(data);
+  console.log(error);
+  if (data && !error) {
+    return (
+      <Modal open={uiProgress === "checkout"}>
+        <h2>Siparişiniz Alındı.</h2>
+        <button
+          className="btn btn-sm btn-outline-danger me-2"
+          onClick={() => handleClose()}
+        >
+          Kapat
+        </button>
+      </Modal>
+    );
+  }
 
   return (
     <Modal open={uiProgress === "checkout"}>
@@ -61,6 +68,7 @@ export default function Checkout() {
       <p className="text-danger">Sipariş Toplam: {cartTotal} ₺</p>
 
       <form onSubmit={handleSubmit}>
+        {error && <div className="alert alert-danger">{error}</div>}
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Ad Soyad
@@ -131,20 +139,28 @@ export default function Checkout() {
             </div>
           </div>
         </div>
-        <button
-          className="btn btn-sm btn-outline-danger me-2"
-          onClick={() => hideCheckout()}
-        >
-          Kapat
-        </button>
+        {isLoading ? (
+          <div className="spinner-border text-warning" role="status">
+            <span className="visually-hidden">Yükleniyor...</span>
+          </div>
+        ) : (
+          <>
+            <button
+              className="btn btn-sm btn-outline-danger me-2"
+              onClick={() => hideCheckout()}
+            >
+              Kapat
+            </button>
 
-        <button
-          type="submit"
-          className="btn btn-sm btn-primary me-2"
-          onClick={() => hideCheckout()}
-        >
-          Kaydet
-        </button>
+            <button
+              type="submit"
+              className="btn btn-sm btn-primary me-2"
+              onClick={() => hideCheckout()}
+            >
+              Kaydet
+            </button>
+          </>
+        )}
       </form>
     </Modal>
   );

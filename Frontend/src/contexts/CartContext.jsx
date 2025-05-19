@@ -16,7 +16,9 @@ export function CartContextProvider({ children }) {
     dispatch({ type: "REMOVE_ITEM", id });
   }
 
-  function clearAll() {}
+  function clearAll() {
+    dispatch({ type: "CLEAR_CART" });
+  }
 
   const cartContext = {
     items: cart.items,

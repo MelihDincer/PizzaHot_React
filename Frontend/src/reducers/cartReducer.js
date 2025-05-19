@@ -33,5 +33,9 @@ export default function cartReducer(state, action) {
     }
     return { ...state, items: updatedItems }; //items, items: güncellenenler öncekileri ezer.
   }
+
+  if (action.type === "CLEAR_CART") {
+    return { ...state, items: [] };
+  }
   return state;
 }

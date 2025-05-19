@@ -2,10 +2,24 @@ import { useContext } from "react";
 import Modal from "./UI/Modal";
 import { UIContext } from "../contexts/UIContext";
 import { CartContext } from "../contexts/CartContext";
+import useFetch from "../hooks/useFetch";
+
+const config = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+};
 
 export default function Checkout() {
   const { uiProgress, hideCheckout } = useContext(UIContext);
   const { items } = useContext(CartContext);
+
+  const { data, isLoading, error, SendRequest } = useFetch(
+    "http://localhost:3000/orders",
+    config,
+    []
+  );
 
   const cartTotal = items.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -16,19 +30,30 @@ export default function Checkout() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const customerData = Object.fromEntries(formData.entries());
-    fetch("http://localhost:3000/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+
+    SendRequest(
+      JSON.stringify({
         order: {
           items: items,
           customer: customerData,
         },
-      }),
-    });
+      })
+    );
   }
+
+  // if (data && !error) {
+  //   return (
+  //     <Modal open={uiProgress === "checkout"}>
+  //       <h2>Siparişiniz Alındı.</h2>
+  //       <button
+  //         className="btn btn-sm btn-outline-danger me-2"
+  //         onClick={() => hideCheckout()}
+  //       >
+  //         Kapat
+  //       </button>
+  //     </Modal>
+  //   );
+  // }
 
   return (
     <Modal open={uiProgress === "checkout"}>

@@ -1,11 +1,14 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const fs = require("fs/promises");
+const cors = require("cors");
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static("public"));
+
+app.use(cors());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -34,7 +37,11 @@ app.post("/orders", async (req, res) => {
     order.customer.address === null ||
     order.customer.address.trim() === "" ||
     order.customer.city === null ||
-    order.customer.city.trim() === ""
+    order.customer.city.trim() === "" ||
+    order.customer.district === null ||
+    order.customer.district.trim() === "" ||
+    order.customer.phone === null ||
+    order.customer.phone.trim() === ""
   ) {
     return res.status(400).json({
       message: "Please fill the form.",
@@ -45,6 +52,7 @@ app.post("/orders", async (req, res) => {
     ...order,
     id: Date.now().toString(),
   };
+  console.log(order);
   const orders = await fs.readFile("data/orders.json", "utf8");
   const allOrders = JSON.parse(orders);
   allOrders.push(newOrder);

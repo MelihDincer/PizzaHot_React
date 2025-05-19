@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react";
 import Pizza from "./Pizza";
+import useFetch from "../hooks/useFetch";
+
+const config = {
+  method: "GET",
+};
 
 export default function PizzaList() {
-  const [loadedPizzas, setLoadedPizzas] = useState([]);
+  const { data, isLoading, error } = useFetch(
+    "http://localhost:3000/pizzas",
+    config
+  );
 
-  useEffect(() => {
-    async function getPizzaList() {
-      const response = await fetch("http://localhost:3000/pizzas");
-      if (!response.ok) {
-        //error log
-      }
+  if (isLoading) {
+    return (
+      <div className="spinner-border text-warning" role="status">
+        <span className="visually-hidden">Yükleniyor...</span>
+      </div>
+    );
+  }
 
-      const pizzas = await response.json();
-      setLoadedPizzas(pizzas);
-    }
-    getPizzaList();
-  }, []);
+  if (error) {
+    return <div className="alert alert-danger">{error}</div>;
+  }
 
   return (
     <div className="pizza-list">
       <div className="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-4">
-        {loadedPizzas.map((pizza, key) => (
+        {data?.map((pizza, key) => (
           <Pizza data={pizza} key={key} />
         ))}
       </div>
